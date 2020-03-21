@@ -1,5 +1,5 @@
-import * as types from './mutation-types';
 import { POPUP_PROPS } from '../popup/utils/popup-messages';
+import * as types from './mutation-types';
 
 export default {
   [types.UPDATE_ACCOUNT](state, payload) {
@@ -116,5 +116,8 @@ export default {
   },
   [types.ADD_NOTIFICATION](state, payload) {
     state.notifications = [...state.notifications, payload];
+  },
+  [types.SET_NOTIFICATIONS_SEEN](state, payload) {
+    state.notificationsSeen = payload;
   },
 };

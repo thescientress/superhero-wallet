@@ -97,6 +97,9 @@ export const getters = {
   notifications({ notifications }) {
     return notifications;
   },
+  notificationsSeen({ notificationsSeen }) {
+    return notificationsSeen;
+  },
   names(state) {
     return state.names;
   },

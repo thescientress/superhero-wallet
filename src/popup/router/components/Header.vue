@@ -11,7 +11,7 @@
 
       <div v-if="isLoggedIn">
         <span class="noti-holder" @click="notifications.length && $router.push('/notifications')" data-cy="noti">
-          <span v-if="notifications.length" class="noti-count" data-cy="noti-count">{{ notifications.length }}</span>
+          <span v-if="notificationsSeen < notifications.length" class="noti-count" data-cy="noti-count">{{ notifications.length }}</span>
           <Bell />
         </span>
         <button @click="$emit('toggle-sidebar')">
@@ -32,7 +32,7 @@ import Logo from '../../../icons/logo-small.svg?vue-component';
 export default {
   components: { Arrow, Bell, Hamburger, Logo },
   computed: {
-    ...mapGetters(['isLoggedIn', 'aeppPopup', 'notifications']),
+    ...mapGetters(['isLoggedIn', 'aeppPopup', 'notifications', 'notificationsSeen']),
     title() {
       return this.$route.meta.title;
     },
@@ -44,7 +44,13 @@ export default {
     goBack() {
       this.$router.push(this.isLoggedIn ? '/account' : '/');
     },
+    async getNotificationsSeen() {
+      const seen = await this.$store.dispatch('getNotificationsSeen');
+    }
   },
+  async created() {
+    this.getNotificationsSeen();
+  }
 };
 </script>
 

@@ -1,11 +1,11 @@
-import { uniqBy, flatten } from 'lodash-es';
 import BigNumber from 'bignumber.js';
-import * as types from './mutation-types';
-import * as popupMessages from '../popup/utils/popup-messages';
-import { convertToAE, stringifyForStorage, parseFromStorage, aettosToAe } from '../popup/utils/helper';
-import { BACKEND_URL, DEFAULT_NETWORK } from '../popup/utils/constants';
+import { flatten, uniqBy } from 'lodash-es';
 import router from '../popup/router/index';
 import { postMessage } from '../popup/utils/connection';
+import { BACKEND_URL, DEFAULT_NETWORK } from '../popup/utils/constants';
+import { aettosToAe, convertToAE, parseFromStorage, stringifyForStorage } from '../popup/utils/helper';
+import * as popupMessages from '../popup/utils/popup-messages';
+import * as types from './mutation-types';
 
 export default {
   setAccount({ commit }, payload) {
@@ -332,5 +332,14 @@ export default {
     if (!backed_up_Seed) return false;
 
     return true;
+  },
+  async setNotificationsSeen({ commit }, payload) {
+    await browser.storage.local.set({ notificationsSeen: payload });
+    commit(types.SET_NOTIFICATIONS_SEEN, payload);
+  },
+  async getNotificationsSeen({ commit }) {
+    const { notificationsSeen } = await browser.storage.local.get('notificationsSeen');
+    commit(types.SET_NOTIFICATIONS_SEEN, notificationsSeen);
+    return (!notificationsSeen) ? 0 : notificationsSeen;
   },
 };

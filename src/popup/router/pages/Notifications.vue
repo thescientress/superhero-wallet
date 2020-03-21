@@ -16,5 +16,8 @@ import { mapGetters } from 'vuex';
 
 export default {
   computed: mapGetters(['notifications']),
+  created() {
+    this.$store.dispatch('setNotificationsSeen', this.notifications.length);
+  }
 };
 </script>

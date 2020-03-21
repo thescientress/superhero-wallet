@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
+import { DEFAULT_NETWORK, networks } from '../popup/utils/constants';
+import { POPUP_PROPS } from '../popup/utils/popup-messages';
+import actions from './actions';
 import { getters } from './getters';
 import mutations from './mutations';
-import actions from './actions';
-import { POPUP_PROPS } from '../popup/utils/popup-messages';
-import { networks, DEFAULT_NETWORK } from '../popup/utils/constants';
+
 
 Vue.use(Vuex);
 
@@ -44,6 +44,7 @@ export default new Vuex.Store({
     nodeStatus: 'connecting',
     currencies: {},
     notifications: [],
+    notificationsSeen: 0,
   },
   getters,
   mutations,
