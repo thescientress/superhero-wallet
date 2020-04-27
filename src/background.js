@@ -1,23 +1,17 @@
 import { setInterval } from 'timers';
-import './lib/initPolyfills';
-import { phishingCheckUrl, getPhishingUrls, setPhishingUrl } from './popup/utils/phishing-detect';
-import { detectConnectionType } from './popup/utils/helper';
-import { buildTx } from './popup/utils';
-import WalletController from './wallet-controller';
-import Notification from './notifications';
-import rpcWallet from './lib/rpcWallet';
-import {
-  HDWALLET_METHODS,
-  AEX2_METHODS,
-  NOTIFICATION_METHODS,
-  CONNECTION_TYPES,
-  DEFAULT_NETWORK,
-} from './popup/utils/constants';
-import { popupProps } from './popup/utils/config';
-import TipClaimRelay from './lib/tip-claim-relay';
-import RedirectChainNames from './lib/redirect-chain-names';
 import { setController, switchNode } from './lib/background-utils';
+import './lib/initPolyfills';
 import { PopupConnections } from './lib/popup-connection';
+import RedirectChainNames from './lib/redirect-chain-names';
+import rpcWallet from './lib/rpcWallet';
+import TipClaimRelay from './lib/tip-claim-relay';
+import Notification from './notifications';
+import { buildTx } from './popup/utils';
+import { popupProps } from './popup/utils/config';
+import { AEX2_METHODS, CONNECTION_TYPES, DEFAULT_NETWORK, HDWALLET_METHODS, NOTIFICATION_METHODS } from './popup/utils/constants';
+import { detectConnectionType } from './popup/utils/helper';
+import { getPhishingUrls, phishingCheckUrl, setPhishingUrl } from './popup/utils/phishing-detect';
+import WalletController from './wallet-controller';
 
 const controller = new WalletController();
 
@@ -118,6 +112,19 @@ if (process.env.IS_EXTENSION && require.main.i === module.id) {
       }
     }
   });
+
+  const contextMenuItem = {
+    "id": "superheroTip",
+    "title": "Tip",
+  };
+
+  browser.contextMenus.create(contextMenuItem);
+  browser.contextMenus.onClicked.addListener((clickData) => {
+    if (clickData.menuItemId == "superheroTip") {
+      alert('tip superhero');
+      // send tip here
+    }
+  })
 }
 
 // eslint-disable-next-line import/prefer-default-export
