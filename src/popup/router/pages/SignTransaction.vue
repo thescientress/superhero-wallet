@@ -188,7 +188,6 @@ export default {
       'tokens',
       'tokenBalance',
       'isLedger',
-      'popup',
       'tokenRegistry',
       'tokenRegistryLima',
     ]),
@@ -803,14 +802,6 @@ export default {
     },
     async checkSourceByteCode(source) {
       const byteCode = await this.sdk.contractCompile(source);
-      return byteCode;
-    },
-    async getDeployedByteCode(address) {
-      const res = await fetch(
-        `https://testnet.mdw.aepps.com/middleware/contracts/transactions/address/${address}`,
-      );
-      const txs = await res.json();
-      const byteCode = txs.transactions.find(tx => tx.tx.type === 'ContractCreateTx');
       return byteCode;
     },
   },

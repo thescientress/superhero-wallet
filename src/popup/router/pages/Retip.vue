@@ -56,7 +56,6 @@ export default {
   computed: {
     ...mapGetters([
       'balance',
-      'popup',
       'tipping',
       'current',
       'sdk',
@@ -90,8 +89,7 @@ export default {
   async created() {
     this.loading = true;
     this.verifiedUrls = (await axios.get(`${BACKEND_URL}/verified`)).data;
-    await this.$watchUntilTruly(() => this.sdk);
-    await this.$watchUntilTruly(() => this.tippingAddress);
+    await this.$watchUntilTruly(() => this.sdk && this.tippingAddress);
     this.minCallFee = calculateFee(TX_TYPES.contractCall, {
       ...this.sdk.Ae.defaults,
       contractId: this.tippingAddress,
@@ -132,6 +130,7 @@ export default {
           this.openCallbackOrGoHome('x-success');
         }
       } catch (e) {
+        this.$logError({ e, tip: this.tip, action: 'retip' });
         this.$store.dispatch('modals/open', { name: 'default', type: 'transaction-failed' });
       } finally {
         this.loading = false;
