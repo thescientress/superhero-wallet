@@ -3,6 +3,7 @@ import { setController, switchNode } from './lib/background-utils';
 import './lib/initPolyfills';
 import { PopupConnections } from './lib/popup-connection';
 import RedirectChainNames from './lib/redirect-chain-names';
+import uid from 'uuid';
 import rpcWallet from './lib/rpcWallet';
 import TipClaimRelay from './lib/tip-claim-relay';
 import Notification from './notifications';
@@ -17,13 +18,6 @@ const controller = new WalletController();
 
 if (process.env.IS_EXTENSION && require.main.i === module.id) {
   RedirectChainNames.init();
-  setInterval(() => {
-    browser.windows.getAll({}).then(wins => {
-      if (wins.length === 0) {
-        sessionStorage.removeItem('phishing_urls');
-      }
-    });
-  }, 5000);
 
   const notification = new Notification();
   setController(controller);
@@ -103,11 +97,15 @@ if (process.env.IS_EXTENSION && require.main.i === module.id) {
 
         popupConnections.addConnection(id, port);
       } else if (connectionType === CONNECTION_TYPES.OTHER) {
-        const check = rpcWallet.sdkReady(() => {
+        // eslint-disable-next-line no-param-reassign
+        port.uuid = uid();
+        if (rpcWallet.sdkReady()) {
           rpcWallet.addConnection(port);
-        });
+        } else {
+          rpcWallet.addConnectionToQueue(port);
+        }
         port.onDisconnect.addListener(() => {
-          clearInterval(check);
+          rpcWallet.removeConnectionFromQueue(port);
         });
       }
     }
